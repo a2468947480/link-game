@@ -147,7 +147,7 @@ export default {
 
     },
     click() {
-      console.log("click");
+      console.log("click123");
     },
   }//end of method
 }
