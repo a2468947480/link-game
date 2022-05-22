@@ -1,14 +1,14 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import link from '../components/link.vue'
+import linkgame from '../components/linkgame.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'link',
-    component: link
+    name: 'linkgame',
+    component: linkgame
   },
 ]
 

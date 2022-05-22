@@ -5,7 +5,7 @@
         <div :style="{
           backgroundColor: config.colors[item.color],
           borderWidth: item.color == 0 ? '0' : '5px'
-        }" class="block" v-for="item in row" :key="item.col">
+        }" class="block" v-for="item in row" :key="item.col" @click="click()">
           <i v-if="item.selected" class="el-icon-star-on"></i>
         </div>
       </div>
@@ -69,7 +69,7 @@
 <script>
 import $ from 'jquery';
 export default {
-  name: "linkingGame",
+  name: "linkgame",
   data() {
     return {
       falseData: false,
@@ -104,7 +104,7 @@ export default {
   },
   methods: {
     start() {
-      //console.log(START);
+      //console.log("START");
       this.isDialogShow = false;
       this.startTime = new Date();
 
@@ -146,7 +146,9 @@ export default {
       }
 
     },
-
+    click() {
+      console.log("click");
+    },
   }//end of method
 }
 </script>

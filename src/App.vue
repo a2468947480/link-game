@@ -7,12 +7,12 @@
 </template>
 
 <script>
-import link from './components/link.vue'
+import linkgame from './components/linkgame.vue'
 
 export default {
   name: 'app',
   components: {
-    link
+    linkgame
   }
 }
 </script>
