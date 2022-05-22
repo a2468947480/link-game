@@ -5,7 +5,7 @@
         <div :style="{
           backgroundColor: config.colors[item.color],
           borderWidth: item.color == 0 ? '0' : '5px'
-        }" class="block" v-for="item in row" :key="item.col" @click="click()">
+        }" class="block" v-for="item in row" :key="item.col" @click="click(item.row, item.col)">
           <i v-if="item.selected" class="el-icon-star-on"></i>
         </div>
       </div>
@@ -112,7 +112,7 @@ export default {
       $("#board").css("width", (this.config.width + 2) * this.config.blockSize)
         .css("height", (this.config.height + 2) * this.config.blockSize);
 
-      //生成方块
+      //生成方块,并设置每个方块的属性
       this.blocks = [];
       for (let i = 0; i < this.config.height + 2; i++) {
         this.blocks.push([]);
@@ -123,6 +123,7 @@ export default {
             color: 0,
             selected: false
           });
+          //console.log(this.blocks[i][j]);
         }
       }
 
@@ -142,12 +143,43 @@ export default {
             flag = true;
           }
           this.blocks[i][j].color = tempColor;
+          //console.log(this.blocks[i][j].color);
         }
       }
 
     },
-    click() {
-      console.log("click");
+    click(row, col) {
+      //console.log("click");
+      //console.log(row, col);
+      //console.log(this.selectedRow, this.selectedCol);
+      //console.log(this.selected);
+      if (this.selected == true) {
+        //如果该方块已经被消掉或者重复选取
+        if (this.blocks[row][col].color == 0 || (row == this.selectedRow && col == this.selectedCol)) {
+          //取消选择
+          this.blocks[this.selectedRow][this.selectedCol].selected = false;
+          this.selected = false;
+        }
+      } else {
+        //console.log('stfalse');
+        //console.log(this.selectedRow, this.selectedCol);
+        //如果当前点击的方块和上一次点击的方块颜色相同则消除两个方块
+        if (this.blocks[row][col].color == this.blocks[this.selectedRow][this.selectedCol].color) {
+          //console.log("yes");
+          this.blocks[row][col].color = 0;
+          this.blocks[this.selectedRow][this.selectedCol].color = 0;
+          this.blocks[this.selectedRow][this.selectedCol].selected = false;
+          this.selected = false;
+
+        } else {
+          //颜色不一样，则选第二个
+          //console.log(3);
+          this.blocks[this.selectedRow][this.selectedCol].selected = false;
+          this.blocks[row][col].selected = true;
+          this.selectedRow = row;
+          this.selectedCol = col;
+        }
+      }
     },
   }//end of method
 }
