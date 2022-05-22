@@ -24,7 +24,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="">
-        <el-button type="primary" >开始</el-button>
+        <el-button type="primary" @click="start()">开始</el-button>
       </span>
     </el-dialog>
   </div>
@@ -67,6 +67,7 @@
 </style>
 
 <script>
+import $ from 'jquery';
 export default {
   name: "linkingGame",
   data() {
@@ -102,8 +103,50 @@ export default {
 
   },
   methods: {
+    start() {
+      //console.log(START);
+      this.isDialogShow = false;
+      this.startTime = new Date();
 
+      //初始化棋盘
+      $("#board").css("width", (this.config.width + 2) * this.config.blockSize)
+        .css("height", (this.config.height + 2) * this.config.blockSize);
 
-  }
+      //生成方块
+      this.blocks = [];
+      for (let i = 0; i < this.config.height + 2; i++) {
+        this.blocks.push([]);
+        for (let j = 0; j < this.config.width + 2; j++) {
+          this.blocks[i].push({
+            row: i,
+            col: j,
+            color: 0,
+            selected: false
+          });
+        }
+      }
+
+      this.$nextTick(() => {
+        $(".block").css("width", this.config.blockSize)
+          .css("height", this.config.blockSize);
+      });
+
+      //给每个方块上色 22一组 保证偶数
+      let tempColor = 0, flag = true;
+      for (let i = 1; i <= this.config.height; i++) {
+        for (let j = 1; j <= this.config.width; j++) {
+          if (flag) {
+            tempColor = Math.floor(Math.random() * (this.config.colors.length - 1)) + 1;
+            flag = false;
+          } else {
+            flag = true;
+          }
+          this.blocks[i][j].color = tempColor;
+        }
+      }
+
+    },
+
+  }//end of method
 }
 </script>
