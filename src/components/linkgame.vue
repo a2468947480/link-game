@@ -146,7 +146,16 @@ export default {
           //console.log(this.blocks[i][j].color);
         }
       }
-
+      //打乱,方块随机交换
+      for (let i = 1; i <= this.config.height; i++) {
+        for (let j = 1; j <= this.config.width; j++) {
+          let randH = Math.floor(Math.random() * this.config.height) + 1;
+          let randW = Math.floor(Math.random() * this.config.width) + 1;
+          let temp = this.blocks[i][j].color;
+          this.blocks[i][j].color = this.blocks[randH][randW].color;
+          this.blocks[randH][randW].color = temp;
+        }
+      }
     },
     click(row, col) {
       //console.log("click");
