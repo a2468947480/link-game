@@ -161,7 +161,7 @@ export default {
       //console.log("click");
       //console.log(row, col);
       //console.log(this.selectedRow, this.selectedCol);
-      //console.log(this.selected);
+      console.log(this.selected);
       if (this.selected == true) {
         //如果该方块已经被消掉或者重复选取
         if (this.blocks[row][col].color == 0 || (row == this.selectedRow && col == this.selectedCol)) {
@@ -169,92 +169,107 @@ export default {
           this.blocks[this.selectedRow][this.selectedCol].selected = false;
           this.selected = false;
         }
-      } else {
-        //console.log('stfalse');
-        //console.log(this.selectedRow, this.selectedCol);
-        //如果当前点击的方块和上一次点击的方块颜色相同则消除两个方块
-        if (this.blocks[row][col].color == this.blocks[this.selectedRow][this.selectedCol].color) {
-          //console.log("yes");
-          if (this.canLink(row, col, this.selectedRow, this.selectedCol) == true) {
-            this.blocks[row][col].color = 0;
-            this.blocks[this.selectedRow][this.selectedCol].color = 0;
-            this.blocks[this.selectedRow][this.selectedCol].selected = false;
-            this.selected = false;
+        else {
+          //console.log('stfalse');
+          //console.log(this.selectedRow, this.selectedCol);
+          //如果当前点击的方块和上一次点击的方块颜色相同则消除两个方块
+          if (this.blocks[row][col].color == this.blocks[this.selectedRow][this.selectedCol].color) {
+            //console.log("yes");
+            if (this.canLink(row, col, this.selectedRow, this.selectedCol) == true) {
+              this.blocks[row][col].color = 0;
+              this.blocks[this.selectedRow][this.selectedCol].color = 0;
+              this.blocks[this.selectedRow][this.selectedCol].selected = false;
+              this.selected = false;
 
+            } else {
+              //不可连，直接选第二个
+              this.blocks[this.selectedRow][this.selectedCol].selected = false;
+              this.blocks[row][col].selected = true;
+              this.selectedRow = row;
+              this.selectedCol = col;
+            }
+          } else {
+            //颜色不一样，则选第二个
+            //console.log(3);
+            this.blocks[this.selectedRow][this.selectedCol].selected = false;
+            this.blocks[row][col].selected = true;
+            this.selectedRow = row;
+            this.selectedCol = col;
           }
-        } else {
-          //颜色不一样，则选第二个
-          //console.log(3);
-          this.blocks[this.selectedRow][this.selectedCol].selected = false;
+        }
+      } else {
+        if (row >= 1 && row <= this.config.height && col >= 1 && col <= this.config.width && this.blocks[row][col].color != 0) {
+          //直接选中
           this.blocks[row][col].selected = true;
+          this.selected = true;
           this.selectedRow = row;
           this.selectedCol = col;
         }
       }
-    },
-    canLink(r1, c1, r2, c2) {
-      console.log(r1, c1, r2, c2);
-      //1号情况判定
-      if (this.canLinkBy1(r1, c1, r2, c2)) {
-        console.log("can1");
+    }
+  },
+  canLink(r1, c1, r2, c2) {
+    //console.log(r1, c1, r2, c2);
+    //1号情况判定
+    if (this.canLinkBy1(r1, c1, r2, c2)) {
+      //console.log("can1");
+      return true;
+    }
+    //2号判定
+    if (this.canLinkBy2(r1, c1, r2, c2)) {
+      //console.log("can2");
+      return true;
+    }
+    //3号判定
+    if (this.canLinkBy3(r1, c1, r2, c2)) {
+      //console.log("can3");
+      return true;
+    }
+    return false;
+  },
+  canLinkBy1(r1, c1, r2, c2) {
+    let min = 0, max = 0, total = 0;
+    //只有在一条线上才能满足1线
+    if (r1 == r2) {
+      min = Math.min(c1, c2);
+      max = Math.max(c1, c2);
+      for (let i = min + 1; i <= max - 1; i++) {
+        total += this.blocks[r1][i].color;
+      }
+      return total == 0;
+    } else if (c1 == c2) {
+      min = Math.min(r1, r2);
+      max = Math.max(r1, r2);
+      for (let i = min + 1; i <= max - 1; i++) {
+        total += this.blocks[i][c1].color;
+      }
+      return total == 0;
+    } else return false;
+  },
+  canLinkBy2(r1, c1, r2, c2) {
+    //方块1和方块2的横竖线交点为空,以及方块到交点路径上为空怎么满足2线
+    if (this.blocks[r1][c2].color == 0) {
+      if (this.canLinkBy1(r1, c1, r1, c2) && this.canLinkBy1(r1, c2, r2, c2))
         return true;
-      }
-      //2号判定
-      if (this.canLinkBy2(r1, c1, r2, c2)) {
-        console.log("can2");
+    }
+    if (this.blocks[r2][c1].color == 0) {
+      if (this.canLinkBy1(r1, c1, r2, c1) && this.canLinkBy1(r2, c1, r2, c2))
         return true;
-      }
-      //3号判定
-      if (this.canLinkBy3(r1, c1, r2, c2)) {
-        console.log("can3");
-        return true;
-      }
-      return false;
-    },
-    canLinkBy1(r1, c1, r2, c2) {
-      let min = 0, max = 0, total = 0;
-      //只有在一条线上才能满足1线
-      if (r1 == r2) {
-        min = Math.min(c1, c2);
-        max = Math.max(c1, c2);
-        for (let i = min + 1; i <= max - 1; i++) {
-          total += this.blocks[r1][i].color;
-        }
-        return total == 0;
-      } else if (c1 == c2) {
-        min = Math.min(r1, r2);
-        max = Math.max(r1, r2);
-        for (let i = min + 1; i <= max - 1; i++) {
-          total += this.blocks[i][c1].color;
-        }
-        return total == 0;
-      } else return false;
-    },
-    canLinkBy2(r1, c1, r2, c2) {
-      //方块1和方块2的横竖线交点为空,以及方块到交点路径上为空怎么满足2线
-      if (this.blocks[r1][c2].color == 0) {
-        if (this.canLinkBy1(r1, c1, r1, c2) && this.canLinkBy1(r1, c2, r2, c2))
-          return true;
-      }
-      if (this.blocks[r2][c1].color == 0) {
-        if (this.canLinkBy1(r1, c1, r2, c1) && this.canLinkBy1(r2, c1, r2, c2))
-          return true;
-      }
-      return false;
-    },
-    canLinkBy3(r1, c1, r2, c2) {
-      //遍历所有方块,当遇到空方块的时候,判定该方块是否和第一次选择的方块之间通(满足can2),判断是否和当前选择的方块为一线(满足can1)
-      //如果都满足,则证明两方块之间通,满足3线
-      for (let i = 0; i < this.config.height + 2; i++) {
-        for (let j = 0; j < this.config.width + 2; j++) {
-          if (this.blocks[i][j].color == 0) {
-            if (this.canLinkBy1(r1, c1, i, j) == true && this.canLinkBy2(i, j, r2, c2) == true)
-              return true;
-          }
+    }
+    return false;
+  },
+  canLinkBy3(r1, c1, r2, c2) {
+    //遍历所有方块,当遇到空方块的时候,判定该方块是否和第一次选择的方块之间通(满足can2),判断是否和当前选择的方块为一线(满足can1)
+    //如果都满足,则证明两方块之间通,满足3线
+    for (let i = 0; i < this.config.height + 2; i++) {
+      for (let j = 0; j < this.config.width + 2; j++) {
+        if (this.blocks[i][j].color == 0) {
+          if (this.canLinkBy1(r1, c1, i, j) == true && this.canLinkBy2(i, j, r2, c2) == true)
+            return true;
         }
       }
-      return false;
-    },
-  }//end of method
-}
+    }
+    return false;
+  },
+}//end of method
 </script>
