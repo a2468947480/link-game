@@ -13,7 +13,7 @@
     <el-dialog title="新游戏" center :visible.sync="isDialogShow" width="320px" :show-close="falseData"
       :close-on-click-modal="falseData" :close-on-press-escape="falseData">
       <el-form label-width="80px">
-        <el-form-item label="格子大小">
+        <el-form-item label="方块大小">
           <el-input-number v-model="config.blockSize" :min="30" :step="5"></el-input-number>
         </el-form-item>
         <el-form-item label="宽">
@@ -22,9 +22,10 @@
         <el-form-item label="高">
           <el-input-number v-model="config.height" :min="4" :step="2"></el-input-number>
         </el-form-item>
+        <p>宽是横着几个方块,高是竖着几个方块</p>
       </el-form>
       <span slot="footer" class="">
-        <el-button type="primary" @click="start()">开始</el-button>
+        <el-button type="primary" @click="checksize()">开始</el-button>
       </span>
     </el-dialog>
   </div>
@@ -63,6 +64,8 @@
       }
     }
   }
+
+
 }
 </style>
 
@@ -76,8 +79,8 @@ export default {
       isDialogShow: true,
       config: {
         blockSize: 50,
-        width: 8,
-        height: 8,
+        width: 4,
+        height: 4,
         colors: [
           "#ffffff",
           "#ff5353",
@@ -100,9 +103,28 @@ export default {
     }
   },//end of  data
   mounted: function () {
-
   },
   methods: {
+    //检查游戏界面是否超出屏幕,不超出则开始游戏,超出则弹框提醒
+    checksize() {
+      //console.log(this.config.blockSize);
+      //console.log(window.screen.availHeight)
+      if (this.config.height * this.config.blockSize > window.screen.availHeight) {
+        this.$alert(("游戏区域的高已经超过您的屏幕,请调整高或者方块大小" +
+          "<br/>" + "当前游戏界面高度为:" + this.config.height * this.config.blockSize +
+          "<br/>" + "您当前屏幕高度为" + window.screen.availHeight), {
+          dangerouslyUseHTMLString: true,
+        })
+      } else if (this.config.width * this.config.blockSize > window.screen.availWidth) {
+        this.$alert(("游戏区域的宽已经超过您的屏幕,请调整宽或者方块大小" +
+          "<br/>" + "当前游戏界面宽度为:" + this.config.width * this.config.blockSize +
+          "<br/>" + "您当前屏幕宽度为" + window.screen.availWidth), {
+          dangerouslyUseHTMLString: true,
+        })
+      } else {
+        this.start();
+      }
+    },
     start() {
       //console.log("START");
       this.isDialogShow = false;
