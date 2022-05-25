@@ -1,6 +1,8 @@
 <template>
   <div id="content">
     <div id="board">
+      <audio src="../assets/bingo.wav" ref="audio1" muted></audio>
+      <audio src="../assets/win.mp3" ref="audio2" muted></audio>
       <div class="blockRow" v-for="row in blocks" :key="row[0].row">
         <div :style="{
           backgroundColor: config.colors[item.color],
@@ -204,6 +206,9 @@ export default {
               this.blocks[this.selectedRow][this.selectedCol].color = 0;
               this.blocks[this.selectedRow][this.selectedCol].selected = false;
               this.selected = false;
+              //播放消除音效
+              this.$refs.audio1.play();
+
               //每次成功消除方块且所有数据刷新后会调用结束判定,如果判定结束,则显示所消耗的时间并重新把棋盘设置界面调出
               this.$nextTick(() => {
                 if (this.isWin()) {
@@ -317,6 +322,7 @@ export default {
             return false;
         }
       }
+      this.$refs.audio2.play();
       return true;
     }
   }
