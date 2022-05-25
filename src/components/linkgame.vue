@@ -125,6 +125,7 @@ export default {
         this.start();
       }
     },
+    //开始游戏
     start() {
       //console.log("START");
       this.isDialogShow = false;
@@ -148,7 +149,7 @@ export default {
           //console.log(this.blocks[i][j]);
         }
       }
-
+      //格子大小设定并确认后立即渲染(修改)前端样式,否侧无法正常修改
       this.$nextTick(() => {
         $(".block").css("width", this.config.blockSize)
           .css("height", this.config.blockSize);
@@ -179,6 +180,7 @@ export default {
         }
       }
     },
+    //方块点击事件
     click(row, col) {
       //console.log("click");
       //console.log(row, col);
@@ -240,6 +242,7 @@ export default {
         }
       }
     },
+    //判定是否可以消除
     canLink(r1, c1, r2, c2) {
       //console.log(r1, c1, r2, c2);
       //1号情况判定
@@ -259,6 +262,7 @@ export default {
       }
       return false;
     },
+    //1号情况判定逻辑
     canLinkBy1(r1, c1, r2, c2) {
       let min = 0, max = 0, total = 0;
       //只有在一条线上才能满足1线
@@ -278,6 +282,7 @@ export default {
         return total == 0;
       } else return false;
     },
+    //二号情况判定逻辑
     canLinkBy2(r1, c1, r2, c2) {
       //方块1和方块2的横竖线交点为空,以及方块到交点路径上为空怎么满足2线
       if (this.blocks[r1][c2].color == 0) {
@@ -290,6 +295,7 @@ export default {
       }
       return false;
     },
+    //3号情况判定逻辑
     canLinkBy3(r1, c1, r2, c2) {
       //遍历所有方块,当遇到空方块的时候,判定该方块是否和第一次选择的方块之间通(满足can2),判断是否和当前选择的方块为一线(满足can1)
       //如果都满足,则证明两方块之间通,满足3线
