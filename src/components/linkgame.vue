@@ -30,6 +30,9 @@
         <el-button type="primary" @click="checksize()">开始</el-button>
       </span>
     </el-dialog>
+    <span slot="footer" class="">
+      <el-button type="primary" @click="recombination()">重新打乱</el-button>
+    </span>
   </div>
 </template>
 
@@ -244,6 +247,18 @@ export default {
           this.selected = true;
           this.selectedRow = row;
           this.selectedCol = col;
+        }
+      }
+    },
+    //游戏中重新打乱
+    recombination() {
+      for (let i = 1; i <= this.config.height; i++) {
+        for (let j = 1; j <= this.config.width; j++) {
+          let randH = Math.floor(Math.random() * this.config.height) + 1;
+          let randW = Math.floor(Math.random() * this.config.width) + 1;
+          let temp = this.blocks[i][j].color;
+          this.blocks[i][j].color = this.blocks[randH][randW].color;
+          this.blocks[randH][randW].color = temp;
         }
       }
     },
