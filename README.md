@@ -1,16 +1,19 @@
 # link-game
 
-## Project setup
+### 安装依赖
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### 编译VUE
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
-```
-npm run build
-```
+### 进入网页
+
+http://localhost:8080/#/
+
+### 开始游戏
+
+设置游戏相关属性,点击开始进行游戏
